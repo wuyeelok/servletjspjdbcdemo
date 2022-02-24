@@ -74,12 +74,33 @@ public class Kenneth1 extends HttpServlet {
 
 			}
 
+			// Clean up environment
+			rs.close();
+
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBC Driver not found");
 			e.printStackTrace();
 		} catch (SQLException e) {
 			System.out.println("Fail to connect to DB or SQL not correct");
 			e.printStackTrace();
+		} finally {
+			// Close resources
+
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		response.getWriter().append("Served at: ").append(request.getContextPath()).append("Connect to DB? -> ")
