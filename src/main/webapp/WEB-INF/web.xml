@@ -16,6 +16,12 @@
   	<description></description>
   	<servlet-class>com.kenneth.wu.Kenneth1</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>Adding</servlet-name>
+  	<display-name>Adding</display-name>
+  	<description></description>
+  	<servlet-class>edureka1.Adding</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>HelloSun</servlet-name>
   	<url-pattern>/HelloSun</url-pattern>
@@ -23,5 +29,9 @@
   <servlet-mapping>
   	<servlet-name>Kenneth1</servlet-name>
   	<url-pattern>/Kenneth1</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Adding</servlet-name>
+  	<url-pattern>/Adding</url-pattern>
   </servlet-mapping>
 </web-app>
