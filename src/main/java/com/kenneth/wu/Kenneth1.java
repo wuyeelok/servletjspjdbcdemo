@@ -72,8 +72,14 @@ public class Kenneth1 extends HttpServlet {
 			p.setString(1, "ABC");
 			p.setString(2, "DEF");
 			p.setInt(3, 35);
+			p.addBatch();
 
-			p.executeUpdate();
+			p.setString(1, "342");
+			p.setString(2, "5345");
+			p.setInt(3, 52);
+			p.addBatch();
+
+			p.executeBatch();
 
 			// Print data from the table
 			stmt2 = conn.createStatement();
