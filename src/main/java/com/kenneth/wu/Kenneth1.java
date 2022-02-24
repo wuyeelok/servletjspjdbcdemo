@@ -3,7 +3,11 @@ package com.kenneth.wu;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,6 +42,9 @@ public class Kenneth1 extends HttpServlet {
 
 		Boolean isConnectDB = false;
 		Connection conn = null;
+		Statement stmt = null;
+
+		List<EMP1> employeeList = null;
 
 		try {
 			// Register JDBC driver
@@ -47,17 +54,36 @@ public class Kenneth1 extends HttpServlet {
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
 			isConnectDB = true;
+
+			// Execute a query
+			stmt = conn.createStatement();
+			String sql = "SELECT id, first, last, age FROM EMP1";
+			ResultSet rs = stmt.executeQuery(sql);
+
+			employeeList = new ArrayList<>();
+
+			while (rs.next()) {
+
+				int id = rs.getInt("id");
+				int age = rs.getInt("age");
+				String first = rs.getString("first");
+				String last = rs.getNString("last");
+
+				EMP1 emp1 = new EMP1(id, age, first, last);
+				employeeList.add(emp1);
+
+			}
+
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBC Driver not found");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("Fail to connect to DB");
+			System.out.println("Fail to connect to DB or SQL not correct");
 			e.printStackTrace();
 		}
 
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath()).append("Connect to DB? -> ")
-				.append(String.valueOf(isConnectDB));
+				.append(String.valueOf(isConnectDB)).append("\n").append(this.printEmp1(employeeList));
 	}
 
 	/**
@@ -70,4 +96,16 @@ public class Kenneth1 extends HttpServlet {
 		doGet(request, response);
 	}
 
+	private String printEmp1(List<EMP1> employees) {
+		StringBuilder sb = new StringBuilder("EMP1 list:\n");
+
+		if (employees != null) {
+			for (EMP1 emp1 : employees) {
+				sb.append("ID: " + emp1.getId() + ", Age: " + emp1.getAge() + ", First Name: " + emp1.getFirst()
+						+ ", Last Name: " + emp1.getLast() + "\n");
+			}
+		}
+
+		return sb.toString();
+	}
 }
