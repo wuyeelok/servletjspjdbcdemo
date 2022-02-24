@@ -3,6 +3,7 @@ package com.kenneth.wu;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,6 +44,8 @@ public class Kenneth1 extends HttpServlet {
 		Boolean isConnectDB = false;
 		Connection conn = null;
 		Statement stmt = null;
+		PreparedStatement p = null;
+		Statement stmt2 = null;
 
 		List<EMP1> employeeList = null;
 
@@ -55,10 +58,34 @@ public class Kenneth1 extends HttpServlet {
 
 			isConnectDB = true;
 
-			// Execute a query
+			// Create a table in DB
 			stmt = conn.createStatement();
-			String sql = "SELECT id, first, last, age FROM EMP1";
-			ResultSet rs = stmt.executeQuery(sql);
+			String sql = "CREATE TABLE IF NOT EXISTS REGISTRATION " + "(id INTEGER NOT NULL AUTO_INCREMENT, "
+					+ " first VARCHAR(255), " + "last VARCHAR(255), " + "age INTEGER, " + " PRIMARY KEY(id))";
+
+			stmt.executeUpdate(sql);
+
+			// Add data in the table
+			String insertRegSQL = "INSERT INTO REGISTRATION (first, last, age) " + " VALUES(?, ?, ?)";
+
+			p = conn.prepareStatement(insertRegSQL);
+			p.setString(1, "ABC");
+			p.setString(2, "DEF");
+			p.setInt(3, 35);
+			p.addBatch();
+
+			p.setString(1, "342");
+			p.setString(2, "5345");
+			p.setInt(3, 52);
+			p.addBatch();
+
+			p.executeBatch();
+
+			// Print data from the table
+			stmt2 = conn.createStatement();
+
+			String sql3 = "SELECT id, first, last, age from REGISTRATION";
+			ResultSet rs = stmt2.executeQuery(sql3);
 
 			employeeList = new ArrayList<>();
 
@@ -89,6 +116,12 @@ public class Kenneth1 extends HttpServlet {
 			try {
 				if (stmt != null) {
 					stmt.close();
+				}
+				if (stmt2 != null) {
+					stmt2.close();
+				}
+				if (p != null) {
+					p.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
